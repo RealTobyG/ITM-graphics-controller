@@ -962,7 +962,7 @@
 </div><!-- end display-root -->
 
 <script>
-// ─── STATE ───
+// ─── DEFAULT STATE ───
 let state = {
   overlay: 'scoreboard',
   scoreboard_visible: true,
@@ -998,86 +998,70 @@ let state = {
   win_prob_b: 38,
   lt_name: 'TenZ',
   lt_sub: 'IGL · Sentinels',
-  ticker: 'VCT Champions 2025 — Grand Final',
 };
 
-// Load saved state from localStorage on startup
-function loadState() {
-  const saved = localStorage.getItem('vct_live_state');
+// Load saved state from localStorage on page load
+function loadSavedState() {
+  const saved = localStorage.getItem('vctDisplayState');
   if (saved) {
-    state = JSON.parse(saved);
+    try {
+      const parsed = JSON.parse(saved);
+      state = { ...state, ...parsed };
+      render();
+    } catch (e) {
+      console.error('Failed to parse saved state:', e);
+    }
   }
-  render();
 }
 
-// Listen for messages from controller
+// Listen for postMessage updates from controller (preview)
 window.addEventListener('message', (event) => {
-  if (event.data.type === 'push') {
-    // Push: apply all changes to live state
-    state = { ...event.data.state };
-    localStorage.setItem('vct_live_state', JSON.stringify(state));
+  if (event.data?.type === 'UPDATE_STATE') {
+    state = { ...state, ...event.data.state };
     render();
-  } else if (event.data.type === 'preview') {
-    // Preview: don't apply to persistent state, just re-render with new state
-    // (only used in iframe preview)
   }
 });
 
-// ─── RENDER ───
-function render() {
-  // Overlay visibility
-  document.getElementById('scoreboardBar').classList.toggle('hidden', !state.scoreboard_visible);
-  document.getElementById('mapLabelBar').classList.toggle('hidden', !state.map_visible);
-  document.getElementById('timerBlock').classList.toggle('hidden', !state.timer_visible);
-  document.getElementById('lowerThird').classList.toggle('hidden', !state.lowerthird_visible);
-  document.getElementById('winProbBar').classList.toggle('hidden', !state.winprob_visible);
-
-  // Hide all overlay panels by default
-  document.getElementById('statsPanel').classList.add('hidden');
-  document.getElementById('teamcompPanel').classList.add('hidden');
-  document.getElementById('mapvotePanel').classList.add('hidden');
-
-  // Show selected overlay
-  if (state.overlay === 'stats') {
-    document.getElementById('statsPanel').classList.remove('hidden');
-  } else if (state.overlay === 'teamcomp') {
-    document.getElementById('teamcompPanel').classList.remove('hidden');
-  } else if (state.overlay === 'mapvote') {
-    document.getElementById('mapvotePanel').classList.remove('hidden');
+// Listen for storage changes (when another tab saves via localStorage)
+window.addEventListener('storage', (event) => {
+  if (event.key === 'vctDisplayState' && event.newValue) {
+    try {
+      const parsed = JSON.parse(event.newValue);
+      state = { ...state, ...parsed };
+      render();
+    } catch (e) {
+      console.error('Failed to parse storage update:', e);
+    }
   }
+});
 
-  // Team colors
-  document.documentElement.style.setProperty('--team-a', state.team_a_color);
-  document.documentElement.style.setProperty('--team-b', state.team_b_color);
+// Notify parent that we're ready to receive updates
+window.parent.postMessage({ type: 'PREVIEW_READY' }, '*');
 
-  // Scores
+// ─── RENDER FUNCTION ───
+function render() {
+  // Update overlay visibility
+  updateOverlayState();
+  
+  // Update scores
   document.getElementById('d-score-a').textContent = state.score_a;
   document.getElementById('d-score-b').textContent = state.score_b;
-
-  // Team info
+  
+  // Update team info
   document.getElementById('d-tag-a').textContent = state.team_a_tag;
   document.getElementById('d-tag-b').textContent = state.team_b_tag;
   document.getElementById('d-region-a').textContent = state.team_a_region;
   document.getElementById('d-region-b').textContent = state.team_b_region;
-
-  // Map series
-  const dots = document.querySelectorAll('.map-dot');
-  dots.forEach((dot, i) => {
-    dot.classList.remove('won-a', 'won-b');
-    if (state.maps[i] === 1) dot.classList.add('won-a');
-    if (state.maps[i] === 2) dot.classList.add('won-b');
-  });
-
-  // Map/round info
-  document.getElementById('d-map-name').textContent = state.map_name.toUpperCase();
-  document.getElementById('d-round-info').textContent = 'RND ' + state.round;
-
-  // Phase tag
-  const phaseTag = document.getElementById('d-phase-tag');
-  phaseTag.textContent = state.phase === 'BUY' ? 'BUY PHASE' : state.phase === 'LIVE' ? 'LIVE' : state.phase === 'END' ? 'END' : state.phase === 'HALF' ? 'HALF-TIME' : state.phase === 'OT' ? 'OVERTIME' : state.phase === 'BREAK' ? 'BREAK' : 'BUY PHASE';
-  phaseTag.className = 'phase-tag ' + state.phase.toLowerCase();
-
-  // Stats panel
+  
+  // Update map series dots
+  updateMapDots();
+  
+  // Update map and round info
+  document.getElementById('d-map-name').textContent = state.map_name;
+  document.getElementById('d-round-info').textContent = `RND ${state.round}`;
+  updatePhaseTag();
+  
+  // Update stats
   document.getElementById('d-stat-player').textContent = state.stat_player;
   document.getElementById('d-stat-agent').textContent = state.stat_agent.toUpperCase();
   document.getElementById('d-stat-acs').textContent = state.stat_acs;
@@ -1088,23 +1072,101 @@ function render() {
   document.getElementById('d-stat-deaths').textContent = state.stat_deaths;
   document.getElementById('d-stat-assists').textContent = state.stat_assists;
   document.getElementById('d-stat-fk').textContent = state.stat_fk;
-
-  // Win probability
+  
+  // Update win probability
   document.getElementById('d-winprob-a').style.width = state.win_prob_a + '%';
   document.getElementById('d-winprob-b').style.width = state.win_prob_b + '%';
   document.getElementById('d-winprob-pct-a').textContent = state.win_prob_a + '%';
   document.getElementById('d-winprob-pct-b').textContent = state.win_prob_b + '%';
-
-  // Lower third
+  
+  // Update lower third
   document.getElementById('d-lt-name').textContent = state.lt_name;
   document.getElementById('d-lt-sub').textContent = state.lt_sub;
-
-  // Ticker
-  document.getElementById('d-ticker').textContent = state.ticker + ' • ' + state.ticker + ' • ' + state.ticker;
+  
+  // Update team comp labels
+  document.getElementById('tc-name-a').textContent = state.team_a_name;
+  document.getElementById('tc-name-b').textContent = state.team_b_name;
 }
 
-// Initialize
-loadState();
+function updateOverlayState() {
+  const overlays = ['scoreboardBar', 'mapLabelBar', 'timerBlock', 'statsPanel', 'winProbBar', 'lowerThird', 'teamcompPanel', 'mapvotePanel'];
+  
+  overlays.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    
+    if (id === 'scoreboardBar' && !state.scoreboard_visible) {
+      el.classList.add('hidden');
+    } else if (id === 'mapLabelBar' && !state.map_visible) {
+      el.classList.add('hidden');
+    } else if (id === 'timerBlock' && !state.timer_visible) {
+      el.classList.add('hidden');
+    } else if (id === 'statsPanel') {
+      if (state.overlay === 'stats') {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    } else if (id === 'winProbBar') {
+      if (state.overlay === 'winprob' && state.winprob_visible) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    } else if (id === 'lowerThird') {
+      if (state.overlay === 'lowerthird' && state.lowerthird_visible) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    } else if (id === 'teamcompPanel') {
+      if (state.overlay === 'teamcomp') {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    } else if (id === 'mapvotePanel') {
+      if (state.overlay === 'mapvote') {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    } else {
+      el.classList.remove('hidden');
+    }
+  });
+}
+
+function updateMapDots() {
+  state.maps.forEach((mapState, idx) => {
+    const dot = document.getElementById(`dot${idx}`);
+    dot.classList.remove('won-a', 'won-b');
+    if (mapState === 1) dot.classList.add('won-a');
+    if (mapState === 2) dot.classList.add('won-b');
+  });
+}
+
+function updatePhaseTag() {
+  const tag = document.getElementById('d-phase-tag');
+  const phaseMap = {
+    'BUY': ['BUY PHASE', 'buy'],
+    'LIVE': ['LIVE', 'live'],
+    'END': ['ROUND END', 'end'],
+    'HALF': ['HALF TIME', 'half'],
+    'OT': ['OVERTIME', 'ot'],
+    'BREAK': ['BREAK', 'end']
+  };
+  
+  const [text, className] = phaseMap[state.phase] || ['BUY PHASE', 'buy'];
+  tag.textContent = text;
+  tag.className = `phase-tag ${className}`;
+}
+
+// Initialize on load
+window.addEventListener('load', () => {
+  loadSavedState();
+  render();
+});
 </script>
 
 </body>
