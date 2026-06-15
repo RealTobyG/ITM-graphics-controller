@@ -797,7 +797,7 @@
       <span style="margin-left:auto; font-family: var(--font-mono); font-size:10px; color: var(--text-dim);">1920 × 1080</span>
     </div>
     <div style="position: relative; aspect-ratio: 16/9; background: #000; overflow:hidden;">
-      <div class="preview-label">PREVIEW — STAGED (PUSH TO APPLY)</div>
+      <div class="preview-label">PREVIEW — LIVE STAGING</div>
       <iframe id="previewFrame" src="display.html" class="preview-iframe" style="width:177.78%; height:177.78%; transform: scale(0.5625); transform-origin: top left; pointer-events:none;"></iframe>
     </div>
   </div>
@@ -915,7 +915,7 @@
         <div class="panel-body">
           <div class="score-editor">
             <div class="score-team-block">
-              <div class="score-team-name" id="score-name-a">TEAM A</div>
+              <div class="score-team-name" id="score-name-a">TEAM RADIANT</div>
               <div class="score-control">
                 <button class="score-btn" onclick="adjustScore('a', -1)">−</button>
                 <div class="score-val" id="score-a">0</div>
@@ -924,7 +924,7 @@
             </div>
             <div class="score-separator">:</div>
             <div class="score-team-block">
-              <div class="score-team-name" id="score-name-b">TEAM B</div>
+              <div class="score-team-name" id="score-name-b">TEAM CIPHER</div>
               <div class="score-control">
                 <button class="score-btn" onclick="adjustScore('b', -1)">−</button>
                 <div class="score-val" id="score-b">0</div>
@@ -981,11 +981,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Full Name</label>
-                <input type="text" value="TEAM A" onchange="stageUpdate('team_a_name', this.value); document.getElementById('score-name-a').textContent = this.value.substring(0,8);">
+                <input type="text" value="TEAM RADIANT" onchange="stageUpdate('team_a_name', this.value); document.getElementById('score-name-a').textContent = this.value.substring(0,12);">
               </div>
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Tag / Abbrev</label>
-                <input type="text" value="TMA" maxlength="4" onchange="stageUpdate('team_a_tag', this.value)">
+                <input type="text" value="RAD" maxlength="4" onchange="stageUpdate('team_a_tag', this.value)">
               </div>
             </div>
             <div class="field-group" style="margin-bottom:8px">
@@ -994,17 +994,10 @@
                 <option>Americas</option><option>EMEA</option><option>Pacific</option><option>China</option>
               </select>
             </div>
-
-            <!-- Roster -->
-            <label class="field-label">Player Roster</label>
-            <div class="roster-row roster-header">
-              <span>IGN</span><span>Agent</span><span>ACS</span>
-            </div>
-            <div id="roster-a"></div>
           </div>
 
           <!-- Team B -->
-          <span class="section-tag">Team B — Defend Side</span>
+          <span class="section-tag">Team B — Defence Side</span>
           <div class="team-block">
             <div class="team-block-header">
               <input type="color" value="#00d4ff" title="Team B Colour" onchange="stageUpdate('team_b_color', this.value)">
@@ -1013,11 +1006,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Full Name</label>
-                <input type="text" value="TEAM B" onchange="stageUpdate('team_b_name', this.value); document.getElementById('score-name-b').textContent = this.value.substring(0,8);">
+                <input type="text" value="TEAM CIPHER" onchange="stageUpdate('team_b_name', this.value); document.getElementById('score-name-b').textContent = this.value.substring(0,12);">
               </div>
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Tag / Abbrev</label>
-                <input type="text" value="TMB" maxlength="4" onchange="stageUpdate('team_b_tag', this.value)">
+                <input type="text" value="CPH" maxlength="4" onchange="stageUpdate('team_b_tag', this.value)">
               </div>
             </div>
             <div class="field-group" style="margin-bottom:8px">
@@ -1026,13 +1019,6 @@
                 <option>Americas</option><option>EMEA</option><option>Pacific</option><option>China</option>
               </select>
             </div>
-
-            <!-- Roster -->
-            <label class="field-label">Player Roster</label>
-            <div class="roster-row roster-header">
-              <span>IGN</span><span>Agent</span><span>ACS</span>
-            </div>
-            <div id="roster-b"></div>
           </div>
 
         </div>
@@ -1040,12 +1026,12 @@
 
     </div>
 
-    <!-- ─── RIGHT: STATS ─── -->
+    <!-- ─── RIGHT: STATS PANEL ─── -->
     <div style="display: flex; flex-direction: column; gap: 16px;">
 
       <!-- PLAYER STATS -->
       <div class="panel">
-        <div class="panel-header"><span class="panel-title">Player Stats Overlay</span></div>
+        <div class="panel-header"><span class="panel-title">Player Stats</span></div>
         <div class="panel-body">
           <div class="field-group">
             <label class="field-label">Player Name</label>
@@ -1053,46 +1039,40 @@
           </div>
           <div class="field-group">
             <label class="field-label">Agent</label>
-            <select onchange="stageUpdate('stat_agent', this.value)">
-              <option>Jett</option><option>Phoenix</option><option>Sage</option><option>Sova</option>
-              <option>Viper</option><option>Breach</option><option>Omen</option><option>Brimstone</option>
-              <option>Skye</option><option>Killjoy</option><option>KAY/O</option><option>Chamber</option>
-              <option>Fade</option><option>Astra</option><option>Reyna</option><option>Raze</option>
-              <option>Iso</option><option>Vyse</option>
-            </select>
+            <input type="text" value="Jett" onchange="stageUpdate('stat_agent', this.value)">
           </div>
           <div class="stat-grid">
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">ACS</label>
-              <input type="number" value="312" onchange="stageUpdate('stat_acs', this.value)">
+              <input type="number" value="312" onchange="stageUpdate('stat_acs', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
-              <label class="field-label">K/D Ratio</label>
-              <input type="number" value="1.42" step="0.01" onchange="stageUpdate('stat_kd', this.value)">
+              <label class="field-label">K/D</label>
+              <input type="number" value="1.42" step="0.01" onchange="stageUpdate('stat_kd', parseFloat(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
-              <label class="field-label">Headshot %</label>
-              <input type="number" value="34" onchange="stageUpdate('stat_hs', this.value)">
+              <label class="field-label">HS%</label>
+              <input type="number" value="34" onchange="stageUpdate('stat_hs', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
-              <label class="field-label">KAST %</label>
-              <input type="number" value="78" onchange="stageUpdate('stat_kast', this.value)">
+              <label class="field-label">KAST%</label>
+              <input type="number" value="78" onchange="stageUpdate('stat_kast', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">Kills</label>
-              <input type="number" value="22" onchange="stageUpdate('stat_kills', this.value)">
+              <input type="number" value="22" onchange="stageUpdate('stat_kills', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">Deaths</label>
-              <input type="number" value="15" onchange="stageUpdate('stat_deaths', this.value)">
+              <input type="number" value="15" onchange="stageUpdate('stat_deaths', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">Assists</label>
-              <input type="number" value="8" onchange="stageUpdate('stat_assists', this.value)">
+              <input type="number" value="8" onchange="stageUpdate('stat_assists', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">First Kills</label>
-              <input type="number" value="6" onchange="stageUpdate('stat_fk', this.value)">
+              <input type="number" value="6" onchange="stageUpdate('stat_fk', parseInt(this.value))">
             </div>
           </div>
         </div>
@@ -1103,12 +1083,12 @@
         <div class="panel-header"><span class="panel-title">Win Probability</span></div>
         <div class="panel-body">
           <div class="field-group">
-            <label class="field-label">Team A %</label>
-            <input type="number" min="0" max="100" value="62" onchange="stageUpdate('win_prob_a', this.value)">
+            <label class="field-label">Team A Probability</label>
+            <input type="number" value="62" min="0" max="100" onchange="stageUpdate('win_prob_a', parseInt(this.value))">
           </div>
           <div class="field-group">
-            <label class="field-label">Team B %</label>
-            <input type="number" min="0" max="100" value="38" onchange="stageUpdate('win_prob_b', this.value)">
+            <label class="field-label">Team B Probability</label>
+            <input type="number" value="38" min="0" max="100" onchange="stageUpdate('win_prob_b', parseInt(this.value))">
           </div>
         </div>
       </div>
@@ -1132,174 +1112,169 @@
 
   </div>
 
-</div>
+</div><!-- end page-wrap -->
 
 <!-- ─── SEND BAR ─── -->
 <div class="send-bar">
   <div class="send-bar-info">
-    <strong id="pendingCount">0</strong> pending changes
+    Staged changes: <strong id="stagedCount">0</strong> fields
   </div>
   <div class="send-bar-actions">
-    <span class="status-flash" id="statusFlash"></span>
-    <button class="broadcast-btn btn-push" id="pushBtn" onclick="pushToDisplay()">↗ PUSH TO DISPLAY</button>
+    <span class="status-flash" id="statusFlash">✓ Pushed to display</span>
+    <button class="broadcast-btn btn-secondary" onclick="resetStaging()">Reset</button>
+    <button class="broadcast-btn btn-push" id="pushBtn" onclick="pushToDisplay()">Push To Display</button>
   </div>
 </div>
 
 <script>
-// ─── STAGING SYSTEM ───
-// pendingState = changes made in the controller (preview only)
-// liveState = what's currently displayed on the display screen
+// ─── SHARED STATE MANAGER ───
+let stagedState = {
+  overlay: 'scoreboard',
+  scoreboard_visible: true,
+  timer_visible: true,
+  map_visible: true,
+  lowerthird_visible: false,
+  winprob_visible: false,
+  score_a: 0,
+  score_b: 0,
+  maps: [0,0,0,0,0],
+  team_a_name: 'TEAM RADIANT',
+  team_a_tag: 'RAD',
+  team_a_color: '#ff4655',
+  team_a_region: 'Americas',
+  team_b_name: 'TEAM CIPHER',
+  team_b_tag: 'CPH',
+  team_b_color: '#00d4ff',
+  team_b_region: 'Pacific',
+  map_name: 'Ascent',
+  round: 1,
+  phase: 'BUY',
+  stat_player: 'TenZ',
+  stat_agent: 'Jett',
+  stat_acs: 312,
+  stat_kd: 1.42,
+  stat_kills: 22,
+  stat_deaths: 15,
+  stat_assists: 8,
+  stat_hs: 34,
+  stat_kast: 78,
+  stat_fk: 6,
+  win_prob_a: 62,
+  win_prob_b: 38,
+  lt_name: 'TenZ',
+  lt_sub: 'IGL · Sentinels',
+};
 
-let pendingState = {};
-let liveState = {};
+let changedFields = new Set();
 
-function initState() {
-  // Load live state from localStorage
-  const saved = localStorage.getItem('vct_live_state');
-  if (saved) {
-    liveState = JSON.parse(saved);
-  } else {
-    liveState = getDefaultState();
-  }
-  pendingState = { ...liveState };
-  updatePendingCounter();
+function stageUpdate(field, value) {
+  stagedState[field] = value;
+  changedFields.add(field);
+  updateStagingUI();
+  syncToPreview();
 }
 
-function getDefaultState() {
-  return {
-    overlay: 'scoreboard',
-    scoreboard_visible: true,
-    timer_visible: true,
-    map_visible: true,
-    lowerthird_visible: false,
-    winprob_visible: false,
-    score_a: 0,
-    score_b: 0,
-    maps: [0,0,0,0,0],
-    team_a_name: 'TEAM A',
-    team_a_tag: 'TMA',
-    team_a_color: '#ff4655',
-    team_a_region: 'Americas',
-    team_b_name: 'TEAM B',
-    team_b_tag: 'TMB',
-    team_b_color: '#00d4ff',
-    team_b_region: 'Aericas',
-    map_name: 'Ascent',
-    round: 1,
-    phase: 'BUY',
-    stat_player: 'TenZ',
-    stat_agent: 'Jett',
-    stat_acs: 312,
-    stat_kd: 1.42,
-    stat_kills: 22,
-    stat_deaths: 15,
-    stat_assists: 8,
-    stat_hs: 34,
-    stat_kast: 78,
-    stat_fk: 6,
-    win_prob_a: 62,
-    win_prob_b: 38,
-    lt_name: 'TenZ',
-    lt_sub: 'Duelist · Sentinels',
-    ticker: 'VCT Masters Reykjavik 2021 — Grand Final',
-  };
-}
-
-function stageUpdate(key, value) {
-  pendingState[key] = value;
-  updatePendingCounter();
-  updatePreviewFrame();
-}
-
-function updateToggle(key, value) {
-  pendingState[key] = value;
-  updatePendingCounter();
-  updatePreviewFrame();
+function updateToggle(field, value) {
+  stagedState[field] = value;
+  changedFields.add(field);
+  updateStagingUI();
+  syncToPreview();
 }
 
 function updateOverlay(value) {
-  pendingState.overlay = value;
-  updatePendingCounter();
-  updatePreviewFrame();
+  stagedState.overlay = value;
+  changedFields.add('overlay');
+  updateStagingUI();
+  syncToPreview();
 }
 
 function adjustScore(team, delta) {
-  const key = team === 'a' ? 'score_a' : 'score_b';
-  pendingState[key] = Math.max(0, (pendingState[key] || 0) + parseInt(delta));
-  document.getElementById('score-' + team).textContent = pendingState[key];
-  updatePendingCounter();
-  updatePreviewFrame();
+  const field = team === 'a' ? 'score_a' : 'score_b';
+  stagedState[field] = Math.max(0, stagedState[field] + delta);
+  changedFields.add(field);
+  document.getElementById(`score-${team}`).textContent = stagedState[field];
+  updateStagingUI();
+  syncToPreview();
 }
 
-function cycleMapSlot(index) {
-  if (!pendingState.maps) pendingState.maps = [0,0,0,0,0];
-  pendingState.maps[index] = (pendingState.maps[index] + 1) % 3;
-  updateMapSlots();
-  updatePendingCounter();
-  updatePreviewFrame();
-}
-
-function updateMapSlots() {
-  const slots = document.querySelectorAll('.map-slot');
-  slots.forEach((slot, i) => {
-    slot.classList.remove('team-a-win', 'team-b-win');
-    slot.dataset.state = pendingState.maps[i];
-    if (pendingState.maps[i] === 1) slot.classList.add('team-a-win');
-    if (pendingState.maps[i] === 2) slot.classList.add('team-b-win');
-  });
+function cycleMapSlot(idx) {
+  const slot = stagedState.maps[idx];
+  stagedState.maps[idx] = (slot + 1) % 3;
+  changedFields.add('maps');
+  updateMapUI();
+  updateStagingUI();
+  syncToPreview();
 }
 
 function setPhase(phase, btn) {
-  pendingState.phase = phase;
+  stagedState.phase = phase;
+  changedFields.add('phase');
   document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  updatePendingCounter();
-  updatePreviewFrame();
+  updateStagingUI();
+  syncToPreview();
 }
 
-function updatePendingCounter() {
-  const diff = Object.keys(pendingState).filter(k => JSON.stringify(pendingState[k]) !== JSON.stringify(liveState[k])).length;
-  document.getElementById('pendingCount').textContent = diff;
-  const btn = document.getElementById('pushBtn');
-  if (diff > 0) {
-    btn.classList.add('has-pending');
+function updateMapUI() {
+  stagedState.maps.forEach((state, idx) => {
+    const slot = document.querySelector(`[onclick="cycleMapSlot(${idx})"]`);
+    slot.classList.remove('team-a-win', 'team-b-win');
+    if (state === 1) slot.classList.add('team-a-win');
+    if (state === 2) slot.classList.add('team-b-win');
+  });
+}
+
+function updateStagingUI() {
+  document.getElementById('stagedCount').textContent = changedFields.size;
+  const pushBtn = document.getElementById('pushBtn');
+  if (changedFields.size > 0) {
+    pushBtn.classList.add('has-pending');
   } else {
-    btn.classList.remove('has-pending');
+    pushBtn.classList.remove('has-pending');
   }
 }
 
-function updatePreviewFrame() {
+function syncToPreview() {
   const iframe = document.getElementById('previewFrame');
-  iframe.contentWindow.postMessage({
-    type: 'preview',
-    state: pendingState
-  }, '*');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({
+      type: 'UPDATE_STATE',
+      state: stagedState
+    }, '*');
+  }
 }
 
 function pushToDisplay() {
-  liveState = { ...pendingState };
-  localStorage.setItem('vct_live_state', JSON.stringify(liveState));
+  localStorage.setItem('vctDisplayState', JSON.stringify(stagedState));
+  changedFields.clear();
+  updateStagingUI();
   
-  // Tell display to update
-  const iframe = document.getElementById('previewFrame');
-  iframe.contentWindow.postMessage({
-    type: 'push',
-    state: liveState
-  }, '*');
-
-  updatePendingCounter();
-  showStatusFlash('✓ PUSHED TO DISPLAY');
-}
-
-function showStatusFlash(msg) {
   const flash = document.getElementById('statusFlash');
-  flash.textContent = msg;
   flash.classList.add('show');
-  setTimeout(() => flash.classList.remove('show'), 2000);
+  setTimeout(() => flash.classList.remove('show'), 3000);
+  
+  const displayWindow = window.open('', 'displayWindow');
+  if (displayWindow) {
+    displayWindow.location.reload();
+  }
 }
 
-// Initialize
-initState();
+function resetStaging() {
+  changedFields.clear();
+  updateStagingUI();
+  syncToPreview();
+}
+
+window.addEventListener('load', () => {
+  updateStagingUI();
+  syncToPreview();
+});
+
+window.addEventListener('message', (event) => {
+  if (event.data?.type === 'PREVIEW_READY') {
+    syncToPreview();
+  }
+});
 </script>
 
 </body>
