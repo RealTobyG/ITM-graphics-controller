@@ -799,18 +799,13 @@
 
 <div class="display-root" id="displayRoot">
 
-  <!-- Demo background placeholder -->
-  <div class="demo-bg-text">VALORANT CHAMPIONSHIP TOUR</div>
-
-  <!-- VCT watermark -->
-  <div class="vct-watermark">VCT Broadcast System</div>
 
   <!-- ─────── TOP SCOREBOARD ─────── -->
   <div class="scoreboard-bar" id="scoreboardBar">
     <!-- Team A -->
     <div class="score-team score-team-a">
       <div class="team-info">
-        <div class="team-tag" id="d-tag-a">RAD</div>
+        <div class="team-tag" id="d-tag-a">TMA</div>
         <div class="team-region" id="d-region-a">Americas</div>
       </div>
     </div>
@@ -834,8 +829,8 @@
     <!-- Team B -->
     <div class="score-team score-team-b">
       <div class="team-info">
-        <div class="team-tag" id="d-tag-b">CPH</div>
-        <div class="team-region" id="d-region-b">Pacific</div>
+        <div class="team-tag" id="d-tag-b">TMB</div>
+        <div class="team-region" id="d-region-b">Americas</div>
       </div>
     </div>
   </div>
@@ -882,8 +877,8 @@
   <!-- ─────── PLAYER STATS ─────── -->
   <div class="stats-panel hidden" id="statsPanel">
     <div class="stats-panel-header">
-      <div class="stats-player-name" id="d-stat-player">TenZ</div>
-      <div class="stats-agent-tag" id="d-stat-agent">JETT</div>
+      <div class="stats-player-name" id="d-stat-player">Player 1</div>
+      <div class="stats-agent-tag" id="d-stat-agent">AGENT 1</div>
     </div>
     <div class="stats-grid">
       <div class="stat-cell">
@@ -924,9 +919,9 @@
   <!-- ─────── TEAM COMP ─────── -->
   <div class="teamcomp-panel hidden" id="teamcompPanel">
     <div class="teamcomp-header">
-      <div class="tc-team-label a" id="tc-name-a">TEAM RADIANT</div>
+      <div class="tc-team-label a" id="tc-name-a">TEAM A</div>
       <div class="tc-vs">VS</div>
-      <div class="tc-team-label b" id="tc-name-b">TEAM CIPHER</div>
+      <div class="tc-team-label b" id="tc-name-b">TEAM B</div>
     </div>
     <div class="teamcomp-players">
       <div class="tc-team-col" id="tc-col-a"></div>
@@ -948,18 +943,6 @@
     </div>
   </div>
 
-  <!-- ─────── TICKER ─────── -->
-  <div class="ticker-bar">
-    <div class="ticker-label">VCT 2025</div>
-    <div class="ticker-scroll-wrap">
-      <div class="ticker-text" id="d-ticker">
-        VCT Champions 2025 — Grand Final &nbsp;&nbsp;•&nbsp;&nbsp; VCT Champions 2025 — Grand Final &nbsp;&nbsp;•&nbsp;&nbsp; VCT Champions 2025 — Grand Final
-      </div>
-    </div>
-    <div class="sponsor-tag" id="d-sponsor">Powered by VALORANT</div>
-  </div>
-
-</div><!-- end display-root -->
 
 <script>
 // ─── DEFAULT STATE ───
@@ -973,19 +956,19 @@ let state = {
   score_a: 0,
   score_b: 0,
   maps: [0,0,0,0,0],
-  team_a_name: 'TEAM RADIANT',
-  team_a_tag: 'RAD',
+  team_a_name: 'TEAM A',
+  team_a_tag: 'TMA',
   team_a_color: '#ff4655',
   team_a_region: 'Americas',
-  team_b_name: 'TEAM CIPHER',
-  team_b_tag: 'CPH',
+  team_b_name: 'TEAM B',
+  team_b_tag: 'TMB',
   team_b_color: '#00d4ff',
-  team_b_region: 'Pacific',
+  team_b_region: 'Americas',
   map_name: 'Ascent',
   round: 1,
   phase: 'BUY',
-  stat_player: 'TenZ',
-  stat_agent: 'Jett',
+  stat_player: 'Player 1',
+  stat_agent: 'Agent1',
   stat_acs: 312,
   stat_kd: 1.42,
   stat_kills: 22,
@@ -996,8 +979,8 @@ let state = {
   stat_fk: 6,
   win_prob_a: 62,
   win_prob_b: 38,
-  lt_name: 'TenZ',
-  lt_sub: 'IGL · Sentinels',
+  lt_name: 'Player 1',
+  lt_sub: 'Role1 · Team A',
 };
 
 // Load saved state from localStorage on page load
