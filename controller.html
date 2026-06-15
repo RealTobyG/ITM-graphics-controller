@@ -981,11 +981,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Full Name</label>
-                <input type="text" value="TEAM RADIANT" onchange="stageUpdate('team_a_name', this.value); document.getElementById('score-name-a').textContent = this.value.substring(0,8);">
+                <input type="text" value="TEAM A" onchange="stageUpdate('team_a_name', this.value); document.getElementById('score-name-a').textContent = this.value.substring(0,8);">
               </div>
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Tag / Abbrev</label>
-                <input type="text" value="RAD" maxlength="4" onchange="stageUpdate('team_a_tag', this.value)">
+                <input type="text" value="TMA" maxlength="4" onchange="stageUpdate('team_a_tag', this.value)">
               </div>
             </div>
             <div class="field-group" style="margin-bottom:8px">
@@ -1013,11 +1013,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Full Name</label>
-                <input type="text" value="TEAM CIPHER" onchange="stageUpdate('team_b_name', this.value); document.getElementById('score-name-b').textContent = this.value.substring(0,8);">
+                <input type="text" value="TEAM B" onchange="stageUpdate('team_b_name', this.value); document.getElementById('score-name-b').textContent = this.value.substring(0,8);">
               </div>
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Tag / Abbrev</label>
-                <input type="text" value="CPH" maxlength="4" onchange="stageUpdate('team_b_tag', this.value)">
+                <input type="text" value="TMB" maxlength="4" onchange="stageUpdate('team_b_tag', this.value)">
               </div>
             </div>
             <div class="field-group" style="margin-bottom:8px">
@@ -1176,14 +1176,14 @@ function getDefaultState() {
     score_a: 0,
     score_b: 0,
     maps: [0,0,0,0,0],
-    team_a_name: 'TEAM RADIANT',
-    team_a_tag: 'RAD',
+    team_a_name: 'TEAM A',
+    team_a_tag: 'TMA',
     team_a_color: '#ff4655',
     team_a_region: 'Americas',
-    team_b_name: 'TEAM CIPHER',
-    team_b_tag: 'CPH',
+    team_b_name: 'TEAM B',
+    team_b_tag: 'TMB',
     team_b_color: '#00d4ff',
-    team_b_region: 'Pacific',
+    team_b_region: 'Aericas',
     map_name: 'Ascent',
     round: 1,
     phase: 'BUY',
@@ -1200,8 +1200,8 @@ function getDefaultState() {
     win_prob_a: 62,
     win_prob_b: 38,
     lt_name: 'TenZ',
-    lt_sub: 'IGL · Sentinels',
-    ticker: 'VCT Champions 2025 — Grand Final',
+    lt_sub: 'Duelist · Sentinels',
+    ticker: 'VCT Masters Reykjavik 2021 — Grand Final',
   };
 }
 
