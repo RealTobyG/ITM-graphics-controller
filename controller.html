@@ -891,7 +891,7 @@
         <div class="panel-body">
           <div class="field-group">
             <label class="field-label">Current Round</label>
-            <input type="number" id="roundNum" value="1" min="1" max="24" style="width:100%" onchange="stageUpdate('round', this.value)">
+            <input type="number" id="roundNum" value="1" min="1" max="24" style="width:100%" oninput="stageUpdate('round', this.value)">
           </div>
           <div class="phase-buttons">
             <button class="phase-btn active" onclick="setPhase('BUY',this)">Buy Phase</button>
@@ -981,11 +981,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Full Name</label>
-                <input type="text" value="TEAM RADIANT" onchange="stageUpdate('team_a_name', this.value); document.getElementById('score-name-a').textContent = this.value.substring(0,12);">
+                <input type="text" value="TEAM RADIANT" oninput="stageUpdate('team_a_name', this.value); document.getElementById('score-name-a').textContent = this.value.substring(0,12);">
               </div>
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Tag / Abbrev</label>
-                <input type="text" value="RAD" maxlength="4" onchange="stageUpdate('team_a_tag', this.value)">
+                <input type="text" value="RAD" maxlength="4" oninput="stageUpdate('team_a_tag', this.value)">
               </div>
             </div>
             <div class="field-group" style="margin-bottom:8px">
@@ -1006,11 +1006,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Full Name</label>
-                <input type="text" value="TEAM CIPHER" onchange="stageUpdate('team_b_name', this.value); document.getElementById('score-name-b').textContent = this.value.substring(0,12);">
+                <input type="text" value="TEAM CIPHER" oninput="stageUpdate('team_b_name', this.value); document.getElementById('score-name-b').textContent = this.value.substring(0,12);">
               </div>
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Tag / Abbrev</label>
-                <input type="text" value="CPH" maxlength="4" onchange="stageUpdate('team_b_tag', this.value)">
+                <input type="text" value="CPH" maxlength="4" oninput="stageUpdate('team_b_tag', this.value)">
               </div>
             </div>
             <div class="field-group" style="margin-bottom:8px">
@@ -1035,44 +1035,44 @@
         <div class="panel-body">
           <div class="field-group">
             <label class="field-label">Player Name</label>
-            <input type="text" value="TenZ" onchange="stageUpdate('stat_player', this.value)">
+            <input type="text" value="TenZ" oninput="stageUpdate('stat_player', this.value)">
           </div>
           <div class="field-group">
             <label class="field-label">Agent</label>
-            <input type="text" value="Jett" onchange="stageUpdate('stat_agent', this.value)">
+            <input type="text" value="Jett" oninput="stageUpdate('stat_agent', this.value)">
           </div>
           <div class="stat-grid">
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">ACS</label>
-              <input type="number" value="312" onchange="stageUpdate('stat_acs', parseInt(this.value))">
+              <input type="number" value="312" oninput="stageUpdate('stat_acs', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">K/D</label>
-              <input type="number" value="1.42" step="0.01" onchange="stageUpdate('stat_kd', parseFloat(this.value))">
+              <input type="number" value="1.42" step="0.01" oninput="stageUpdate('stat_kd', parseFloat(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">HS%</label>
-              <input type="number" value="34" onchange="stageUpdate('stat_hs', parseInt(this.value))">
+              <input type="number" value="34" oninput="stageUpdate('stat_hs', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">KAST%</label>
-              <input type="number" value="78" onchange="stageUpdate('stat_kast', parseInt(this.value))">
+              <input type="number" value="78" oninput="stageUpdate('stat_kast', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">Kills</label>
-              <input type="number" value="22" onchange="stageUpdate('stat_kills', parseInt(this.value))">
+              <input type="number" value="22" oninput="stageUpdate('stat_kills', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">Deaths</label>
-              <input type="number" value="15" onchange="stageUpdate('stat_deaths', parseInt(this.value))">
+              <input type="number" value="15" oninput="stageUpdate('stat_deaths', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">Assists</label>
-              <input type="number" value="8" onchange="stageUpdate('stat_assists', parseInt(this.value))">
+              <input type="number" value="8" oninput="stageUpdate('stat_assists', parseInt(this.value))">
             </div>
             <div class="field-group" style="margin-bottom:0">
               <label class="field-label">First Kills</label>
-              <input type="number" value="6" onchange="stageUpdate('stat_fk', parseInt(this.value))">
+              <input type="number" value="6" oninput="stageUpdate('stat_fk', parseInt(this.value))">
             </div>
           </div>
         </div>
@@ -1084,11 +1084,11 @@
         <div class="panel-body">
           <div class="field-group">
             <label class="field-label">Team A Probability</label>
-            <input type="number" value="62" min="0" max="100" onchange="stageUpdate('win_prob_a', parseInt(this.value))">
+            <input type="number" value="62" min="0" max="100" oninput="stageUpdate('win_prob_a', parseInt(this.value))">
           </div>
           <div class="field-group">
             <label class="field-label">Team B Probability</label>
-            <input type="number" value="38" min="0" max="100" onchange="stageUpdate('win_prob_b', parseInt(this.value))">
+            <input type="number" value="38" min="0" max="100" oninput="stageUpdate('win_prob_b', parseInt(this.value))">
           </div>
         </div>
       </div>
@@ -1099,11 +1099,11 @@
         <div class="panel-body">
           <div class="field-group">
             <label class="field-label">Name</label>
-            <input type="text" value="TenZ" onchange="stageUpdate('lt_name', this.value)">
+            <input type="text" value="TenZ" oninput="stageUpdate('lt_name', this.value)">
           </div>
           <div class="field-group">
             <label class="field-label">Subtitle</label>
-            <input type="text" value="IGL · Sentinels" onchange="stageUpdate('lt_sub', this.value)">
+            <input type="text" value="IGL · Sentinels" oninput="stageUpdate('lt_sub', this.value)">
           </div>
         </div>
       </div>
@@ -1127,6 +1127,9 @@
 </div>
 
 <script>
+// ─── BROADCAST CHANNEL (live push to display tab, no reload needed) ───
+const displayChannel = new BroadcastChannel('vct_display');
+
 // ─── SHARED STATE MANAGER ───
 let stagedState = {
   overlay: 'scoreboard',
@@ -1245,18 +1248,17 @@ function syncToPreview() {
 }
 
 function pushToDisplay() {
+  // Send live update to display tab via BroadcastChannel (no reload needed)
+  displayChannel.postMessage({ type: 'PUSH_STATE', state: stagedState });
+  // Also persist so display.html loads correct state if opened fresh
   localStorage.setItem('vctDisplayState', JSON.stringify(stagedState));
+
   changedFields.clear();
   updateStagingUI();
-  
+
   const flash = document.getElementById('statusFlash');
   flash.classList.add('show');
   setTimeout(() => flash.classList.remove('show'), 3000);
-  
-  const displayWindow = window.open('', 'displayWindow');
-  if (displayWindow) {
-    displayWindow.location.reload();
-  }
 }
 
 function resetStaging() {

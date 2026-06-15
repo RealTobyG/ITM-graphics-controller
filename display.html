@@ -1022,16 +1022,12 @@ window.addEventListener('message', (event) => {
   }
 });
 
-// Listen for storage changes (when another tab saves via localStorage)
-window.addEventListener('storage', (event) => {
-  if (event.key === 'vctDisplayState' && event.newValue) {
-    try {
-      const parsed = JSON.parse(event.newValue);
-      state = { ...state, ...parsed };
-      render();
-    } catch (e) {
-      console.error('Failed to parse storage update:', e);
-    }
+// Listen for live pushes from controller via BroadcastChannel (no reload needed)
+const displayChannel = new BroadcastChannel('vct_display');
+displayChannel.addEventListener('message', (event) => {
+  if (event.data?.type === 'PUSH_STATE') {
+    state = { ...state, ...event.data.state };
+    render();
   }
 });
 
