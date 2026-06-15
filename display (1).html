@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCT Display Output</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;600;700;800;900&family=Tungsten:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #ff4655;
+    --accent-dark: #c0192a;
+    --accent2: #00d4ff;
+    --bg: #0a0a0f;
+    --text: #ffffff;
+    --text-dim: rgba(255,255,255,0.55);
+    --surface: rgba(10,10,20,0.82);
+    --surface2: rgba(20,20,35,0.9);
+    --border: rgba(255,255,255,0.08);
+    --font-head: 'Barlow Condensed', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --team-a: #ff4655;
+    --team-b: #00d4ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: transparent;
+    font-family: var(--font-body);
+    color: var(--text);
+  }
+
+  /* ─────────────────────────────────────────
+     TOP SCOREBOARD BAR
+  ───────────────────────────────────────── */
+  .scoreboard-bar {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 72px;
+    display: flex;
+    align-items: stretch;
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), opacity 0.4s;
+  }
+
+  .scoreboard-bar.hidden {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+
+  /* Team A side */
+  .score-team {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .score-team-a {
+    flex-direction: row-reverse;
+    background: linear-gradient(90deg, var(--surface) 60%, rgba(255,70,85,0.18) 100%);
+    clip-path: polygon(0 0, calc(100% - 0px) 0, 100% 100%, 0 100%);
+    border-bottom: 2px solid var(--team-a);
+    padding: 0 20px 0 24px;
+  }
+
+  .score-team-b {
+    background: linear-gradient(270deg, var(--surface) 60%, rgba(0,212,255,0.18) 100%);
+    border-bottom: 2px solid var(--team-b);
+    padding: 0 24px 0 20px;
+  }
+
+  .team-tag {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .score-team-a .team-tag { color: var(--team-a); text-align: right; }
+  .score-team-b .team-tag { color: var(--team-b); }
+
+  .team-region {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .team-info { display: flex; flex-direction: column; flex: 1; }
+  .score-team-a .team-info { align-items: flex-end; }
+
+  /* Centre score block */
+  .score-centre {
+    width: 160px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface2);
+    position: relative;
+    border-bottom: 2px solid rgba(255,255,255,0.15);
+  }
+
+  .score-centre::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  }
+
+  .score-digits {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .score-num {
+    font-family: var(--font-head);
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1;
+    transition: all 0.3s;
+  }
+
+  .score-num.team-a { color: var(--team-a); }
+  .score-num.team-b { color: var(--team-b); }
+
+  .score-colon {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.3);
+    line-height: 1;
+  }
+
+  .map-series-dots {
+    display: flex;
+    gap: 5px;
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .map-dot {
+    width: 10px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.12);
+    transition: all 0.3s;
+  }
+
+  .map-dot.won-a { background: var(--team-a); box-shadow: 0 0 6px var(--team-a); }
+  .map-dot.won-b { background: var(--team-b); box-shadow: 0 0 6px var(--team-b); }
+
+  /* Map/Round label area */
+  .map-label-bar {
+    position: absolute;
+    top: 72px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0;
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), opacity 0.4s;
+  }
+
+  .map-label-bar.hidden {
+    transform: translateX(-50%) translateY(-200%);
+    opacity: 0;
+  }
+
+  .map-pill {
+    background: rgba(0,0,0,0.75);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-top: none;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .map-name-txt {
+    font-family: var(--font-head);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    padding: 5px 14px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .round-info {
+    font-family: var(--font-head);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+  }
+
+  .phase-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-left: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .phase-tag.buy { color: #f5a623; }
+  .phase-tag.live { color: var(--accent); }
+  .phase-tag.end { color: rgba(255,255,255,0.5); }
+  .phase-tag.half { color: var(--accent2); }
+  .phase-tag.ot { color: #a855f7; }
+
+  /* ─────────────────────────────────────────
+     ROUND TIMER
+  ───────────────────────────────────────── */
+  .timer-block {
+    position: absolute;
+    top: 116px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.4s;
+  }
+
+  .timer-block.hidden {
+    transform: translateX(-50%) translateY(-300%);
+    opacity: 0;
+  }
+
+  .timer-digits {
+    font-family: var(--font-head);
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(255,70,85,0.5);
+  }
+
+  .timer-digits.low { color: var(--accent); animation: timer-pulse 0.5s ease-in-out infinite alternate; }
+  @keyframes timer-pulse { from { opacity: 1; } to { opacity: 0.6; } }
+
+  /* ─────────────────────────────────────────
+     LOWER THIRD
+  ───────────────────────────────────────── */
+  .lower-third {
+    position: absolute;
+    bottom: 120px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform-origin: left bottom;
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), opacity 0.5s;
+  }
+
+  .lower-third.hidden {
+    transform: translateX(-110%);
+    opacity: 0;
+  }
+
+  .lt-accent-bar {
+    height: 3px;
+    width: 0;
+    background: var(--accent);
+    transition: width 0.8s cubic-bezier(0.22,1,0.36,1) 0.3s;
+  }
+
+  .lower-third:not(.hidden) .lt-accent-bar { width: 100%; }
+
+  .lt-name-block {
+    display: flex;
+    align-items: center;
+    background: var(--surface2);
+    border-right: 3px solid var(--accent);
+  }
+
+  .lt-name-accent {
+    width: 6px;
+    height: 100%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .lt-name-txt {
+    font-family: var(--font-head);
+    font-size: 44px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 10px 24px 8px 18px;
+    line-height: 1;
+  }
+
+  .lt-sub-block {
+    display: flex;
+    align-items: center;
+    background: rgba(255,70,85,0.85);
+    padding: 5px 18px;
+    align-self: flex-start;
+  }
+
+  .lt-sub-txt {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  /* ─────────────────────────────────────────
+     WIN PROBABILITY BAR
+  ───────────────────────────────────────── */
+  .win-prob-bar {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    transition: opacity 0.4s, transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .win-prob-bar.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(40px);
+  }
+
+  .win-prob-label {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .win-prob-track {
+    height: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .win-prob-fill-a {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--team-a), rgba(255,70,85,0.7));
+    transition: width 1s cubic-bezier(0.22,1,0.36,1);
+    border-radius: 4px 0 0 4px;
+  }
+
+  .win-prob-fill-b {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(270deg, var(--team-b), rgba(0,212,255,0.7));
+    transition: width 1s cubic-bezier(0.22,1,0.36,1);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .win-prob-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .win-prob-pct {
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .win-prob-pct.a { color: var(--team-a); }
+  .win-prob-pct.b { color: var(--team-b); }
+
+  /* ─────────────────────────────────────────
+     PLAYER STATS PANEL
+  ───────────────────────────────────────── */
+  .stats-panel {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 420px;
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    overflow: hidden;
+    transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), opacity 0.4s;
+  }
+
+  .stats-panel.hidden {
+    transform: translateX(110%);
+    opacity: 0;
+  }
+
+  .stats-panel-header {
+    padding: 10px 18px;
+    background: rgba(255,70,85,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .stats-player-name {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .stats-agent-tag {
+    font-family: var(--font-head);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: rgba(255,255,255,0.06);
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  .stat-cell {
+    padding: 12px 14px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-cell:nth-child(4n) { border-right: none; }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .stat-value {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .stat-value.highlight { color: var(--accent); }
+
+  /* ─────────────────────────────────────────
+     TEAM COMP PANEL
+  ───────────────────────────────────────── */
+  .teamcomp-panel {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    transition: opacity 0.4s, transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .teamcomp-panel.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+
+  .teamcomp-header {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .tc-team-label {
+    font-family: var(--font-head);
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .tc-team-label.a { color: var(--team-a); }
+  .tc-team-label.b { color: var(--team-b); text-align: right; }
+  .tc-vs { text-align: center; font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--text-dim); }
+
+  .teamcomp-players {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tc-team-col {
+    padding: 0;
+  }
+
+  .tc-player-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.2s;
+  }
+
+  .tc-player-row:last-child { border-bottom: none; }
+  .tc-team-col:first-child .tc-player-row { border-right: 1px solid rgba(255,255,255,0.04); }
+
+  .tc-agent-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0;
+    flex-shrink: 0;
+  }
+
+  .tc-agent-icon.a { background: rgba(255,70,85,0.2); color: var(--team-a); border: 1px solid rgba(255,70,85,0.3); }
+  .tc-agent-icon.b { background: rgba(0,212,255,0.2); color: var(--team-b); border: 1px solid rgba(0,212,255,0.3); }
+
+  .tc-player-info { flex: 1; min-width: 0; }
+
+  .tc-ign {
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tc-agent-name {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .tc-acs {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.7);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ─────────────────────────────────────────
+     MAP VOTE PANEL
+  ───────────────────────────────────────── */
+  .mapvote-panel {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 760px;
+    transition: opacity 0.4s, transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .mapvote-panel.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+
+  .mapvote-title {
+    text-align: center;
+    font-family: var(--font-head);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  .mapvote-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .mapvote-card {
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 16px 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .mapvote-card.picked { border-color: var(--accent); }
+  .mapvote-card.banned { opacity: 0.35; }
+  .mapvote-card.banned::after {
+    content: 'BANNED';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.4);
+    background: rgba(0,0,0,0.4);
+  }
+
+  .mapvote-name {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .mapvote-status {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .mapvote-status.pick-a { color: var(--team-a); }
+  .mapvote-status.pick-b { color: var(--team-b); }
+  .mapvote-status.decider { color: #f5a623; }
+
+  /* ─────────────────────────────────────────
+     TICKER BAR (bottom)
+  ───────────────────────────────────────── */
+  .ticker-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: rgba(0,0,0,0.88);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .ticker-label {
+    flex-shrink: 0;
+    background: var(--accent);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-family: var(--font-head);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .ticker-scroll-wrap {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+  }
+
+  .ticker-text {
+    position: absolute;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-family: var(--font-head);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.8);
+    animation: ticker-scroll 24s linear infinite;
+    left: 100%;
+  }
+
+  @keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-100% - 100vw)); }
+  }
+
+  .sponsor-tag {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    padding: 0 16px;
+    border-left: 1px solid rgba(255,255,255,0.06);
+    white-space: nowrap;
+  }
+
+  /* ─────────────────────────────────────────
+     ANIMATIONS
+  ───────────────────────────────────────── */
+  @keyframes slide-down {
+    from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+    to   { transform: translateX(-50%) translateY(0); opacity: 1; }
+  }
+
+  @keyframes fade-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes score-bump {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  .score-num.bumping { animation: score-bump 0.4s cubic-bezier(0.36,0.07,0.19,0.97); }
+
+  /* VCT Watermark */
+  .vct-watermark {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-family: var(--font-head);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.18);
+  }
+
+  /* Demo bg */
+  .demo-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-head);
+    font-size: 120px;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.015);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="display-root" id="displayRoot">
+
+  <!-- Demo background placeholder -->
+  <div class="demo-bg-text">VALORANT CHAMPIONSHIP TOUR</div>
+
+  <!-- VCT watermark -->
+  <div class="vct-watermark">VCT Broadcast System</div>
+
+  <!-- ─────── TOP SCOREBOARD ─────── -->
+  <div class="scoreboard-bar" id="scoreboardBar">
+    <!-- Team A -->
+    <div class="score-team score-team-a">
+      <div class="team-info">
+        <div class="team-tag" id="d-tag-a">RAD</div>
+        <div class="team-region" id="d-region-a">Americas</div>
+      </div>
+    </div>
+
+    <!-- Centre score block -->
+    <div class="score-centre">
+      <div class="score-digits">
+        <div class="score-num team-a" id="d-score-a">0</div>
+        <div class="score-colon">:</div>
+        <div class="score-num team-b" id="d-score-b">0</div>
+      </div>
+      <div class="map-series-dots" id="d-series-dots">
+        <div class="map-dot" id="dot0"></div>
+        <div class="map-dot" id="dot1"></div>
+        <div class="map-dot" id="dot2"></div>
+        <div class="map-dot" id="dot3"></div>
+        <div class="map-dot" id="dot4"></div>
+      </div>
+    </div>
+
+    <!-- Team B -->
+    <div class="score-team score-team-b">
+      <div class="team-info">
+        <div class="team-tag" id="d-tag-b">CPH</div>
+        <div class="team-region" id="d-region-b">Pacific</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────── MAP / ROUND BAR ─────── -->
+  <div class="map-label-bar" id="mapLabelBar">
+    <div class="map-pill">
+      <div class="map-name-txt" id="d-map-name">ASCENT</div>
+      <div class="round-info" id="d-round-info">RND 1</div>
+      <div class="phase-tag buy" id="d-phase-tag">BUY PHASE</div>
+    </div>
+  </div>
+
+  <!-- ─────── TIMER ─────── -->
+  <div class="timer-block" id="timerBlock">
+    <div class="timer-digits" id="d-timer">1:40</div>
+  </div>
+
+  <!-- ─────── LOWER THIRD ─────── -->
+  <div class="lower-third hidden" id="lowerThird">
+    <div class="lt-accent-bar"></div>
+    <div class="lt-name-block">
+      <div class="lt-name-accent"></div>
+      <div class="lt-name-txt" id="d-lt-name">TenZ</div>
+    </div>
+    <div class="lt-sub-block">
+      <div class="lt-sub-txt" id="d-lt-sub">IGL · Sentinels</div>
+    </div>
+  </div>
+
+  <!-- ─────── WIN PROBABILITY ─────── -->
+  <div class="win-prob-bar hidden" id="winProbBar">
+    <div class="win-prob-label">WIN PROBABILITY</div>
+    <div class="win-prob-track">
+      <div class="win-prob-fill-a" id="d-winprob-a" style="width:62%"></div>
+      <div class="win-prob-fill-b" id="d-winprob-b" style="width:38%"></div>
+    </div>
+    <div class="win-prob-labels">
+      <div class="win-prob-pct a" id="d-winprob-pct-a">62%</div>
+      <div class="win-prob-pct b" id="d-winprob-pct-b">38%</div>
+    </div>
+  </div>
+
+  <!-- ─────── PLAYER STATS ─────── -->
+  <div class="stats-panel hidden" id="statsPanel">
+    <div class="stats-panel-header">
+      <div class="stats-player-name" id="d-stat-player">TenZ</div>
+      <div class="stats-agent-tag" id="d-stat-agent">JETT</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-label">ACS</div>
+        <div class="stat-value highlight" id="d-stat-acs">312</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">K/D</div>
+        <div class="stat-value" id="d-stat-kd">1.42</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">HS%</div>
+        <div class="stat-value" id="d-stat-hs">34%</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">KAST</div>
+        <div class="stat-value" id="d-stat-kast">78%</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Kills</div>
+        <div class="stat-value" id="d-stat-kills">22</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Deaths</div>
+        <div class="stat-value" id="d-stat-deaths">15</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Assists</div>
+        <div class="stat-value" id="d-stat-assists">8</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">FK</div>
+        <div class="stat-value" id="d-stat-fk">6</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────── TEAM COMP ─────── -->
+  <div class="teamcomp-panel hidden" id="teamcompPanel">
+    <div class="teamcomp-header">
+      <div class="tc-team-label a" id="tc-name-a">TEAM RADIANT</div>
+      <div class="tc-vs">VS</div>
+      <div class="tc-team-label b" id="tc-name-b">TEAM CIPHER</div>
+    </div>
+    <div class="teamcomp-players">
+      <div class="tc-team-col" id="tc-col-a"></div>
+      <div class="tc-team-col" id="tc-col-b"></div>
+    </div>
+  </div>
+
+  <!-- ─────── MAP VOTE ─────── -->
+  <div class="mapvote-panel hidden" id="mapvotePanel">
+    <div class="mapvote-title">Map Selection</div>
+    <div class="mapvote-grid" id="mapvoteGrid">
+      <div class="mapvote-card picked"><div class="mapvote-name">Ascent</div><div class="mapvote-status pick-a">PICK — RAD</div></div>
+      <div class="mapvote-card banned"><div class="mapvote-name">Bind</div><div class="mapvote-status">BANNED</div></div>
+      <div class="mapvote-card"><div class="mapvote-name">Breeze</div><div class="mapvote-status pick-b">PICK — CPH</div></div>
+      <div class="mapvote-card"><div class="mapvote-name">Haven</div><div class="mapvote-status decider">DECIDER</div></div>
+      <div class="mapvote-card banned"><div class="mapvote-name">Pearl</div><div class="mapvote-status">BANNED</div></div>
+      <div class="mapvote-card banned"><div class="mapvote-name">Lotus</div><div class="mapvote-status">BANNED</div></div>
+      <div class="mapvote-card banned"><div class="mapvote-name">Split</div><div class="mapvote-status">BANNED</div></div>
+    </div>
+  </div>
+
+  <!-- ─────── TICKER ─────── -->
+  <div class="ticker-bar">
+    <div class="ticker-label">VCT 2025</div>
+    <div class="ticker-scroll-wrap">
+      <div class="ticker-text" id="d-ticker">
+        VCT Champions 2025 — Grand Final &nbsp;&nbsp;•&nbsp;&nbsp; VCT Champions 2025 — Grand Final &nbsp;&nbsp;•&nbsp;&nbsp; VCT Champions 2025 — Grand Final
+      </div>
+    </div>
+    <div class="sponsor-tag" id="d-sponsor">Powered by VALORANT</div>
+  </div>
+
+</div><!-- end display-root -->
+
+<script>
+// ─── STATE ───
+let state = {
+  overlay: 'scoreboard',
+  scoreboard_visible: true,
+  timer_visible: true,
+  map_visible: true,
+  lowerthird_visible: false,
+  winprob_visible: false,
+  score_a: 0,
+  score_b: 0,
+  maps: [0,0,0,0,0],
+  team_a_name: 'TEAM RADIANT',
+  team_a_tag: 'RAD',
+  team_a_color: '#ff4655',
+  team_a_region: 'Americas',
+  team_b_name: 'TEAM CIPHER',
+  team_b_tag: 'CPH',
+  team_b_color: '#00d4ff',
+  team_b_region: 'Pacific',
+  map_name: 'Ascent',
+  round: 1,
+  phase: 'BUY',
+  stat_player: 'TenZ',
+  stat_agent: 'Jett',
+  stat_acs: 312,
+  stat_kd: 1.42,
+  stat_kills: 22,
+  stat_deaths: 15,
+  stat_assists: 8,
+  stat_hs: 34,
+  stat_kast: 78,
+  stat_fk: 6,
+  win_prob_a: 62,
+  win_prob_b: 38,
+  lt_name: 'TenZ',
+  lt_sub: 'IGL · Sentinels',
+  ticker: 'VCT Champions 2025 — Grand Final',
+};
+
+// Load saved state from localStorage on startup
+function loadState() {
+  const saved = localStorage.getItem('vct_live_state');
+  if (saved) {
+    state = JSON.parse(saved);
+  }
+  render();
+}
+
+// Listen for messages from controller
+window.addEventListener('message', (event) => {
+  if (event.data.type === 'push') {
+    // Push: apply all changes to live state
+    state = { ...event.data.state };
+    localStorage.setItem('vct_live_state', JSON.stringify(state));
+    render();
+  } else if (event.data.type === 'preview') {
+    // Preview: don't apply to persistent state, just re-render with new state
+    // (only used in iframe preview)
+  }
+});
+
+// ─── RENDER ───
+function render() {
+  // Overlay visibility
+  document.getElementById('scoreboardBar').classList.toggle('hidden', !state.scoreboard_visible);
+  document.getElementById('mapLabelBar').classList.toggle('hidden', !state.map_visible);
+  document.getElementById('timerBlock').classList.toggle('hidden', !state.timer_visible);
+  document.getElementById('lowerThird').classList.toggle('hidden', !state.lowerthird_visible);
+  document.getElementById('winProbBar').classList.toggle('hidden', !state.winprob_visible);
+
+  // Hide all overlay panels by default
+  document.getElementById('statsPanel').classList.add('hidden');
+  document.getElementById('teamcompPanel').classList.add('hidden');
+  document.getElementById('mapvotePanel').classList.add('hidden');
+
+  // Show selected overlay
+  if (state.overlay === 'stats') {
+    document.getElementById('statsPanel').classList.remove('hidden');
+  } else if (state.overlay === 'teamcomp') {
+    document.getElementById('teamcompPanel').classList.remove('hidden');
+  } else if (state.overlay === 'mapvote') {
+    document.getElementById('mapvotePanel').classList.remove('hidden');
+  }
+
+  // Team colors
+  document.documentElement.style.setProperty('--team-a', state.team_a_color);
+  document.documentElement.style.setProperty('--team-b', state.team_b_color);
+
+  // Scores
+  document.getElementById('d-score-a').textContent = state.score_a;
+  document.getElementById('d-score-b').textContent = state.score_b;
+
+  // Team info
+  document.getElementById('d-tag-a').textContent = state.team_a_tag;
+  document.getElementById('d-tag-b').textContent = state.team_b_tag;
+  document.getElementById('d-region-a').textContent = state.team_a_region;
+  document.getElementById('d-region-b').textContent = state.team_b_region;
+
+  // Map series
+  const dots = document.querySelectorAll('.map-dot');
+  dots.forEach((dot, i) => {
+    dot.classList.remove('won-a', 'won-b');
+    if (state.maps[i] === 1) dot.classList.add('won-a');
+    if (state.maps[i] === 2) dot.classList.add('won-b');
+  });
+
+  // Map/round info
+  document.getElementById('d-map-name').textContent = state.map_name.toUpperCase();
+  document.getElementById('d-round-info').textContent = 'RND ' + state.round;
+
+  // Phase tag
+  const phaseTag = document.getElementById('d-phase-tag');
+  phaseTag.textContent = state.phase === 'BUY' ? 'BUY PHASE' : state.phase === 'LIVE' ? 'LIVE' : state.phase === 'END' ? 'END' : state.phase === 'HALF' ? 'HALF-TIME' : state.phase === 'OT' ? 'OVERTIME' : state.phase === 'BREAK' ? 'BREAK' : 'BUY PHASE';
+  phaseTag.className = 'phase-tag ' + state.phase.toLowerCase();
+
+  // Stats panel
+  document.getElementById('d-stat-player').textContent = state.stat_player;
+  document.getElementById('d-stat-agent').textContent = state.stat_agent.toUpperCase();
+  document.getElementById('d-stat-acs').textContent = state.stat_acs;
+  document.getElementById('d-stat-kd').textContent = state.stat_kd;
+  document.getElementById('d-stat-hs').textContent = state.stat_hs + '%';
+  document.getElementById('d-stat-kast').textContent = state.stat_kast + '%';
+  document.getElementById('d-stat-kills').textContent = state.stat_kills;
+  document.getElementById('d-stat-deaths').textContent = state.stat_deaths;
+  document.getElementById('d-stat-assists').textContent = state.stat_assists;
+  document.getElementById('d-stat-fk').textContent = state.stat_fk;
+
+  // Win probability
+  document.getElementById('d-winprob-a').style.width = state.win_prob_a + '%';
+  document.getElementById('d-winprob-b').style.width = state.win_prob_b + '%';
+  document.getElementById('d-winprob-pct-a').textContent = state.win_prob_a + '%';
+  document.getElementById('d-winprob-pct-b').textContent = state.win_prob_b + '%';
+
+  // Lower third
+  document.getElementById('d-lt-name').textContent = state.lt_name;
+  document.getElementById('d-lt-sub').textContent = state.lt_sub;
+
+  // Ticker
+  document.getElementById('d-ticker').textContent = state.ticker + ' • ' + state.ticker + ' • ' + state.ticker;
+}
+
+// Initialize
+loadState();
+</script>
+
+</body>
+</html>
