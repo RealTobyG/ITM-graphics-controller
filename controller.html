@@ -981,11 +981,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Full Name</label>
-                <input type="text" value="TEAM RADIANT" oninput="stageUpdate('team_a_name', this.value); document.getElementById('score-name-a').textContent = this.value.substring(0,12);">
+                <input type="text" value="TEAM A" oninput="stageUpdate('team_a_name', this.value); document.getElementById('score-name-a').textContent = this.value.substring(0,12);">
               </div>
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Tag / Abbrev</label>
-                <input type="text" value="RAD" maxlength="4" oninput="stageUpdate('team_a_tag', this.value)">
+                <input type="text" value="TMA" maxlength="4" oninput="stageUpdate('team_a_tag', this.value)">
               </div>
             </div>
             <div class="field-group" style="margin-bottom:8px">
@@ -1006,11 +1006,11 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Full Name</label>
-                <input type="text" value="TEAM CIPHER" oninput="stageUpdate('team_b_name', this.value); document.getElementById('score-name-b').textContent = this.value.substring(0,12);">
+                <input type="text" value="TEAM B" oninput="stageUpdate('team_b_name', this.value); document.getElementById('score-name-b').textContent = this.value.substring(0,12);">
               </div>
               <div class="field-group" style="margin-bottom:0">
                 <label class="field-label">Tag / Abbrev</label>
-                <input type="text" value="CPH" maxlength="4" oninput="stageUpdate('team_b_tag', this.value)">
+                <input type="text" value="TMB" maxlength="4" oninput="stageUpdate('team_b_tag', this.value)">
               </div>
             </div>
             <div class="field-group" style="margin-bottom:8px">
@@ -1035,11 +1035,11 @@
         <div class="panel-body">
           <div class="field-group">
             <label class="field-label">Player Name</label>
-            <input type="text" value="TenZ" oninput="stageUpdate('stat_player', this.value)">
+            <input type="text" value="Player 1" oninput="stageUpdate('stat_player', this.value)">
           </div>
           <div class="field-group">
             <label class="field-label">Agent</label>
-            <input type="text" value="Jett" oninput="stageUpdate('stat_agent', this.value)">
+            <input type="text" value="Agent1" oninput="stageUpdate('stat_agent', this.value)">
           </div>
           <div class="stat-grid">
             <div class="field-group" style="margin-bottom:0">
@@ -1099,11 +1099,11 @@
         <div class="panel-body">
           <div class="field-group">
             <label class="field-label">Name</label>
-            <input type="text" value="TenZ" oninput="stageUpdate('lt_name', this.value)">
+            <input type="text" value="Player 1" oninput="stageUpdate('lt_name', this.value)">
           </div>
           <div class="field-group">
             <label class="field-label">Subtitle</label>
-            <input type="text" value="IGL · Sentinels" oninput="stageUpdate('lt_sub', this.value)">
+            <input type="text" value="Role1 · Team A" oninput="stageUpdate('lt_sub', this.value)">
           </div>
         </div>
       </div>
@@ -1141,19 +1141,19 @@ let stagedState = {
   score_a: 0,
   score_b: 0,
   maps: [0,0,0,0,0],
-  team_a_name: 'TEAM RADIANT',
-  team_a_tag: 'RAD',
+  team_a_name: 'TEAM A',
+  team_a_tag: 'TMA',
   team_a_color: '#ff4655',
   team_a_region: 'Americas',
-  team_b_name: 'TEAM CIPHER',
-  team_b_tag: 'CPH',
+  team_b_name: 'TEAM B',
+  team_b_tag: 'TMB',
   team_b_color: '#00d4ff',
-  team_b_region: 'Pacific',
+  team_b_region: 'Americas',
   map_name: 'Ascent',
   round: 1,
   phase: 'BUY',
-  stat_player: 'TenZ',
-  stat_agent: 'Jett',
+  stat_player: 'Player 1',
+  stat_agent: 'Agent1',
   stat_acs: 312,
   stat_kd: 1.42,
   stat_kills: 22,
@@ -1164,8 +1164,8 @@ let stagedState = {
   stat_fk: 6,
   win_prob_a: 62,
   win_prob_b: 38,
-  lt_name: 'TenZ',
-  lt_sub: 'IGL · Sentinels',
+  lt_name: 'Player 1',
+  lt_sub: 'Role1 · Team A',
 };
 
 let changedFields = new Set();
